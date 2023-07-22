@@ -1,0 +1,41 @@
+---
+- name: get tomb
+  become: yes
+  get_url:
+    url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
+    dest: /home/kj/
+  register: tomb_archive
+# ---
+- name: Unarchive tomb
+  become: yes
+  unarchive:
+    src: /home/kj/Tomb-2.9.tar.gz
+    dest: /home/kj
+    creates: /home/kj/Tomb-2.9
+  when: tomb_archive is changed
+  register: unarchived
+# ---
+- name: install tomb dependencies
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - make
+      - steghide
+    state: present
+# ---
+- name: Run 'make install' for tomb
+  become: yes
+  make:
+    chdir: /home/kj/Tomb-2.9
+    target: install
+  when: unarchived is changed
+# ---
+- name: Cleanup tomb
+  ansible.builtin.file:
+    state: absent
+    path: "{{ tomb_item }}"
+  with_items:
+    - /home/kj/Tomb-2.9.tar.gz
+    - /home/kj/Tomb-2.9/
+  loop_control:
+    loop_var: tomb_item
