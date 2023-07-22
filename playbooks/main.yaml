@@ -3,5 +3,6 @@
   tasks:
     - include_tasks: "{{ item }}"
       with_fileglob:
-        - ../tasks/packages/*.y*ml
-        - ../tasks/zsh/*.y*ml
+        - ../tasks/packages/*.yaml
+        - ../tasks/packages/zsh/*.y*ml
+        - ../tasks/packages/tomb/*.yaml
