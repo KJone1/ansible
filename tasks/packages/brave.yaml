@@ -1,0 +1,22 @@
+---
+- name: install dnf-plugins-core
+  become: true
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: present
+# ---
+- name: Add brave repo
+  become: yes
+  ansible.builtin.command: dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+# ---
+- name: Import brave rpm
+  become: true
+  ansible.builtin.command: rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+# ---
+- name: install brave
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - brave-browser
+      - brave-keyring
+    state: present

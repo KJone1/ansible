@@ -1,14 +1,20 @@
 ---
-# - name: Return motd to registered var
-#   ansible.builtin.command: rpm --import https://packages.microsoft.com/keys/microsoft.asc
-#   become: yes
-
-# - name: Return motd to registered var
-#   ansible.builtin.command: 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-#   become: yes
-
 - name: install vscode
   become: true
   ansible.builtin.dnf:
-    name: code
+    name:
+      - code
+      - helm
     state: present
+# ---
+- name: install kubectl
+  become: true
+  ansible.builtin.shell: curl -L -o /home/kj/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# ---
+- name: set kubectl file permissions
+  become: true
+  ansible.builtin.file:
+    path: /home/kj/.local/bin/kubectl
+    owner: kj
+    group: kj
+    mode: "0751"
