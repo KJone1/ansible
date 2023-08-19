@@ -9,6 +9,7 @@ export PATH="$PATH:/home/kj/.local/bin"
 # --- Set up aliass here ---
 alias k="kubectl"
 alias uu="sudo dnf upgrade -y"
+alias vim="nvim"
 # ---
 
 # Set name of the theme to load --- if set to "random", it will
