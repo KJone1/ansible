@@ -1,0 +1,12 @@
+---
+- name: install kubectl
+  become: true
+  ansible.builtin.shell: curl -L -o /home/kj/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# ---
+- name: set kubectl file permissions
+  become: true
+  ansible.builtin.file:
+    path: /usr/bin/kubectl
+    owner: kj
+    group: kj
+    mode: "0751"
