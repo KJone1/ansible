@@ -21,7 +21,7 @@
 - name: Copy nerdctl.toml to /etc
   ansible.builtin.copy:
     src: ./files/nerdctl.toml
-    dest: /etc/nerdctl/
+    dest: /etc/nerdctl/nerdctl.toml
     mode: "0644"
 # ---
 - name: Cleanup nerdctl
