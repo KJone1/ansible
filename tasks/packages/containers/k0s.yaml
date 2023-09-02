@@ -1,9 +1,9 @@
 ---
-- name: install k0s
+- name: Install k0s
   become: true
   ansible.builtin.shell: curl -sSLf https://get.k0s.sh | sudo sh
 # ---
-- name: start k0s
+- name: Start k0s
   become: true
   ansible.builtin.shell: sudo k0s install controller --single
 # ---

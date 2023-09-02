@@ -1,5 +1,5 @@
 ---
-- name: install dnf-plugins-core
+- name: Install dnf-plugins-core
   become: true
   ansible.builtin.dnf:
     name: dnf-plugins-core
@@ -13,7 +13,7 @@
   become: true
   ansible.builtin.command: rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
 # ---
-- name: install brave
+- name: Install brave
   become: true
   ansible.builtin.dnf:
     name:

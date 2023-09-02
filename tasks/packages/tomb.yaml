@@ -15,7 +15,7 @@
   when: tomb_archive is changed
   register: unarchived
 # ---
-- name: install tomb dependencies
+- name: Install tomb dependencies
   become: true
   ansible.builtin.dnf:
     name:
