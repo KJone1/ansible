@@ -1,7 +1,17 @@
 ---
-- hosts: all
+- name: Setup workstation
+  hosts: all
+  # ---
   tasks:
-    - include_tasks: "{{ item }}"
-      with_fileglob:
-        - ../tasks/packages/*.yaml
-        - ../tasks/packages/zsh/*.yaml
+    - name: Find yaml files in tasks folder
+      ansible.builtin.find:
+        paths: "../tasks/"
+        patterns: "*.yaml,*.yml"
+        recurse: yes
+        excludes: "facts.yaml"
+      register: tasks_found
+    # ---
+    - include_tasks: "{{ task.path }}"
+      loop: "{{ tasks_found.files }}"
+      loop_control:
+        loop_var: task
