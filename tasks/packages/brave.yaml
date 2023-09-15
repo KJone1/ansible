@@ -1,4 +1,9 @@
 ---
+- name: Check brave installation status
+  command: which brave-browser
+  changed_when: false
+  register: brave_installed
+# ---
 - name: Install dnf-plugins-core
   become: true
   ansible.builtin.dnf:
@@ -7,14 +12,17 @@
 # ---
 - name: Add brave repo
   become: yes
+  when: brave_installed is changed
   ansible.builtin.command: dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
 # ---
 - name: Import brave rpm
   become: true
+  when: brave_installed is changed
   ansible.builtin.command: rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
 # ---
 - name: Install brave
   become: true
+  when: brave_installed is changed
   ansible.builtin.dnf:
     name:
       - brave-browser
