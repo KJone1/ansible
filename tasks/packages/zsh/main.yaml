@@ -8,16 +8,18 @@
 # ---
 - name: Install oh-my-zsh
   become: true
-  ansible.builtin.shell: curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
   when: zsh is changed
+  ansible.builtin.shell: curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
 # ---
 - name: Copy .zshrc to home folder
+  when: zsh is changed
   ansible.builtin.copy:
     src: ./files/.zshrc
     dest: /home/kj/.zshrc
     mode: "0644"
 # ---
 - name: Copy zsh theme to themes folder
+  when: zsh is changed
   ansible.builtin.copy:
     src: ./files/darkblood_preconf.zsh-theme
     dest: /home/kj/.oh-my-zsh/themes/darkblood_preconf.zsh-theme

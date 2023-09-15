@@ -1,9 +1,16 @@
 ---
+- name: Check kubectl installation status
+  command: which kubectl
+  changed_when: false
+  register: kubectl_installed
+# ---
 - name: Install kubectl
   become: true
+  when: kubectl_installed is changed
   ansible.builtin.shell: curl -L -o /home/kj/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 # ---
 - name: Set kubectl file permissions
+  when: kubectl_installed is changed
   become: true
   ansible.builtin.file:
     path: /usr/bin/kubectl

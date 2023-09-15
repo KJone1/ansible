@@ -1,10 +1,15 @@
 ---
+- name: Check tomb installation status
+  command: which tomb
+  changed_when: false
+  register: tomb_installed
+# ---
 - name: get tomb
   become: yes
+  when: tomb_installed is changed
   get_url:
     url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
     dest: /home/kj/
-  register: tomb_archive
 # ---
 - name: Unarchive tomb
   become: yes
@@ -12,11 +17,11 @@
     src: /home/kj/Tomb-2.9.tar.gz
     dest: /home/kj
     creates: /home/kj/Tomb-2.9
-  when: tomb_archive is changed
-  register: unarchived
+  when: tomb_installed is changed
 # ---
 - name: Install tomb dependencies
   become: true
+  when: tomb_installed is changed
   ansible.builtin.dnf:
     name:
       - make
@@ -28,7 +33,7 @@
   make:
     chdir: /home/kj/Tomb-2.9
     target: install
-  when: unarchived is changed
+  when: tomb_installed is changed
 # ---
 - name: Cleanup tomb
   ansible.builtin.file:
@@ -39,3 +44,4 @@
     - /home/kj/Tomb-2.9/
   loop_control:
     loop_var: tomb_item
+  when: tomb_installed is changed

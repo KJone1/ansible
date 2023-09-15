@@ -1,7 +1,14 @@
 ---
+- name: Check nerdctl installation status
+  command: which nerdctl
+  changed_when: false
+  register: nerdctl_installed
+# ---
 - name: Install nerdctl
   become: true
+  when: nerdctl_installed is changed
   ansible.builtin.shell: curl -L -o /home/kj/nerdctl-1.5.0.tar.gz "https://github.com/containerd/nerdctl/releases/download/v1.5.0/nerdctl-1.5.0-linux-amd64.tar.gz"
+  register: install_nerdctl
 # ---
 - name: Unarchive nerdctl
   become: yes
@@ -9,22 +16,25 @@
     src: nerdctl-1.5.0.tar.gz
     dest: /home/kj
     creates: /home/kj/nerdctl-1.5.0
-  when: tomb_archive is changed
+  when: install_nerdctl is changed
   register: unarchived
 # ---
 - name: Copy nerdctl bin to /usr/bin
+  when: install_nerdctl is changed
   ansible.builtin.copy:
     src: /home/kj/nerdctl-1.5.0/nerdctl
     dest: /usr/bin/nerdctl
     mode: "0755"
 # ---
 - name: Copy nerdctl.toml to /etc
+  when: install_nerdctl is changed
   ansible.builtin.copy:
     src: ./files/nerdctl.toml
     dest: /etc/nerdctl/nerdctl.toml
     mode: "0644"
 # ---
 - name: Cleanup nerdctl
+
   ansible.builtin.file:
     state: absent
     path: "{{ nerd_item }}"
@@ -33,3 +43,4 @@
     - /home/kj/nerdctl-1.5.0/
   loop_control:
     loop_var: nerd_item
+  when: install_nerdctl is changed
