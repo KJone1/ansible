@@ -6,12 +6,16 @@
     - name: Find yaml files in tasks folder
       ansible.builtin.find:
         paths: "../tasks/"
-        patterns: "*.yaml,*.yml"
+        patterns:
+          - "*.yaml"
+          - "*.yml"
         recurse: yes
-        excludes: "facts.yaml"
+        excludes:
+          - "facts.yaml"
       register: tasks_found
     # ---
     - include_tasks: "{{ task.path }}"
+      no_log: true
       loop: "{{ tasks_found.files }}"
       loop_control:
         loop_var: task
