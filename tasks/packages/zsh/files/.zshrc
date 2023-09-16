@@ -5,7 +5,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 export KUBECONFIG="/home/kj/.kube/config"
-export PATH="$PATH:/home/kj/.local/bin"
+export PATH="$PATH:/home/kj/.local/bin:/opt"
 # --- Set up aliass here ---
 alias k="kubectl"
 alias uu="sudo dnf upgrade -y"
