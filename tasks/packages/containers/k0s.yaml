@@ -4,13 +4,11 @@
   changed_when: false
   register: k0s_installed
 # ---
-- name: Install k0s
+- block:
+    - name: Install k0s
+      ansible.builtin.shell: curl -sSLf https://get.k0s.sh | sudo sh
+    # ---
+    - name: Start k0s
+      ansible.builtin.shell: sudo k0s install controller --single
   become: true
   when: k0s_installed is changed
-  ansible.builtin.shell: curl -sSLf https://get.k0s.sh | sudo sh
-# ---
-- name: Start k0s
-  become: true
-  when: k0s_installed is changed
-  ansible.builtin.shell: sudo k0s install controller --single
-# ---

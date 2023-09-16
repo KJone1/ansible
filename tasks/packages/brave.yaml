@@ -4,27 +4,23 @@
   changed_when: false
   register: brave_installed
 # ---
-- name: Install dnf-plugins-core
+- block:
+    - name: Install dnf-plugins-core
+      ansible.builtin.dnf:
+        name: dnf-plugins-core
+        state: present
+    # ---
+    - name: Add brave repo
+      ansible.builtin.shell: dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+    # ---
+    - name: Import brave rpm
+      ansible.builtin.shell: rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+    # ---
+    - name: Install brave
+      ansible.builtin.dnf:
+        name:
+          - brave-browser
+          - brave-keyring
+        state: present
   become: true
-  ansible.builtin.dnf:
-    name: dnf-plugins-core
-    state: present
-# ---
-- name: Add brave repo
-  become: yes
   when: brave_installed is changed
-  ansible.builtin.command: dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-# ---
-- name: Import brave rpm
-  become: true
-  when: brave_installed is changed
-  ansible.builtin.command: rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
-# ---
-- name: Install brave
-  become: true
-  when: brave_installed is changed
-  ansible.builtin.dnf:
-    name:
-      - brave-browser
-      - brave-keyring
-    state: present

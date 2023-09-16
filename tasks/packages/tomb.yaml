@@ -4,44 +4,38 @@
   changed_when: false
   register: tomb_installed
 # ---
-- name: get tomb
-  become: yes
-  when: tomb_installed is changed
-  get_url:
-    url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
-    dest: /home/kj/
-# ---
-- name: Unarchive tomb
-  become: yes
-  unarchive:
-    src: /home/kj/Tomb-2.9.tar.gz
-    dest: /home/kj
-    creates: /home/kj/Tomb-2.9
-  when: tomb_installed is changed
-# ---
-- name: Install tomb dependencies
+- block:
+    - name: get tomb
+      get_url:
+        url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
+        dest: /home/kj/
+    # ---
+    - name: Unarchive tomb
+      unarchive:
+        src: /home/kj/Tomb-2.9.tar.gz
+        dest: /home/kj
+        creates: /home/kj/Tomb-2.9
+    # ---
+    - name: Install tomb dependencies
+      ansible.builtin.dnf:
+        name:
+          - make
+          - steghide
+        state: present
+    # ---
+    - name: Run 'make install' for tomb
+      make:
+        chdir: /home/kj/Tomb-2.9
+        target: install
+    # ---
+    - name: Cleanup tomb
+      ansible.builtin.file:
+        state: absent
+        path: "{{ tomb_item }}"
+      with_items:
+        - /home/kj/Tomb-2.9.tar.gz
+        - /home/kj/Tomb-2.9/
+      loop_control:
+        loop_var: tomb_item
   become: true
-  when: tomb_installed is changed
-  ansible.builtin.dnf:
-    name:
-      - make
-      - steghide
-    state: present
-# ---
-- name: Run 'make install' for tomb
-  become: yes
-  make:
-    chdir: /home/kj/Tomb-2.9
-    target: install
-  when: tomb_installed is changed
-# ---
-- name: Cleanup tomb
-  ansible.builtin.file:
-    state: absent
-    path: "{{ tomb_item }}"
-  with_items:
-    - /home/kj/Tomb-2.9.tar.gz
-    - /home/kj/Tomb-2.9/
-  loop_control:
-    loop_var: tomb_item
   when: tomb_installed is changed
