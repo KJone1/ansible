@@ -2,5 +2,5 @@
 - name: Add sudoers file
   ansible.builtin.copy:
     src: ./files/kj
-    dest: /etc/sudoers.d
+    dest: /etc/sudoers.d/kj
     mode: "0640"
