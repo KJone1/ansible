@@ -1,0 +1,6 @@
+---
+- name: Add wallpaper
+  ansible.builtin.copy:
+    src: ./files/great.jpg
+    dest: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/great.jpg"
+    mode: "0640"
