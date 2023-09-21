@@ -1,20 +1,20 @@
 ---
 - name: Check tomb installation status
   command: which tomb
-  changed_when: false
+  failed_when: false
   register: tomb_installed
 # ---
 - block:
     - name: get tomb
       get_url:
         url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
-        dest: /home/kj/
+        dest: "{{ lookup('env', 'HOME') }}/"
     # ---
     - name: Unarchive tomb
       unarchive:
-        src: /home/kj/Tomb-2.9.tar.gz
-        dest: /home/kj
-        creates: /home/kj/Tomb-2.9
+        src: "{{ lookup('env', 'HOME') }}/Tomb-2.9.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}"
+        creates: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
     # ---
     - name: Install tomb dependencies
       ansible.builtin.dnf:
@@ -25,7 +25,7 @@
     # ---
     - name: Run 'make install' for tomb
       make:
-        chdir: /home/kj/Tomb-2.9
+        chdir: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
         target: install
     # ---
     - name: Cleanup tomb
@@ -33,9 +33,10 @@
         state: absent
         path: "{{ tomb_item }}"
       with_items:
-        - /home/kj/Tomb-2.9.tar.gz
-        - /home/kj/Tomb-2.9/
+        - "{{ lookup('env', 'HOME') }}/Tomb-2.9.tar.gz"
+        - "{{ lookup('env', 'HOME') }}/Tomb-2.9/"
       loop_control:
         loop_var: tomb_item
   become: true
-  when: tomb_installed is changed
+  check_mode: false
+  when: tomb_installed.rc != 0
