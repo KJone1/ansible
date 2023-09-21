@@ -1,7 +1,7 @@
 ---
 - name: Check k0s installation status
-  command: which kubectl
-  changed_when: false
+  command: which k0s
+  failed_when: false
   register: k0s_installed
 # ---
 - block:
@@ -11,4 +11,5 @@
     - name: Start k0s
       ansible.builtin.shell: sudo k0s install controller --single
   become: true
-  when: k0s_installed is changed
+  check_mode: false
+  when: k0s_installed.rc != 0

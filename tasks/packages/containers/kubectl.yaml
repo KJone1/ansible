@@ -1,12 +1,12 @@
 ---
 - name: Check kubectl installation status
   command: which kubectl
-  changed_when: false
+  failed_when: false
   register: kubectl_installed
 # ---
 - block:
     - name: Install kubectl
-      ansible.builtin.shell: curl -L -o /home/kj/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}"/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     # ---
     - name: Set kubectl file permissions
       ansible.builtin.file:
@@ -15,4 +15,5 @@
         group: kj
         mode: "0751"
   become: true
-  when: kubectl_installed is changed
+  check_mode: false
+  when: kubectl_installed.rc != 0

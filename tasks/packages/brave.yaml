@@ -1,7 +1,7 @@
 ---
 - name: Check brave installation status
   command: which brave-browser
-  changed_when: false
+  failed_when: false
   register: brave_installed
 # ---
 - block:
@@ -23,4 +23,5 @@
           - brave-keyring
         state: present
   become: true
-  when: brave_installed is changed
+  check_mode: false
+  when: brave_installed.rc != 0
