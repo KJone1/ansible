@@ -2,6 +2,7 @@
 - name: Check brave installation status
   command: which brave-browser
   failed_when: false
+  changed_when: false
   register: brave_installed
 # ---
 - block:

@@ -2,6 +2,7 @@
 - name: Check terraform installation status
   command: which terraform
   failed_when: false
+  changed_when: false
   register: terraform_installed
 # ---
 - block:
