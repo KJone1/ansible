@@ -1,0 +1,23 @@
+---
+- name: Check terraform installation status
+  command: which terraform
+  failed_when: false
+  register: terraform_installed
+# ---
+- block:
+    - name: Install dnf-plugins-core
+      ansible.builtin.dnf:
+        name: dnf-plugins-core
+        state: present
+    # ---
+    - name: Add terraform repo
+      ansible.builtin.shell: dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+    # ---
+    - name: Install terraform
+      ansible.builtin.dnf:
+        name:
+          - terraform
+        state: present
+  become: true
+  check_mode: false
+  when: terraform_installed.rc != 0
