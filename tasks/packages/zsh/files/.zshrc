@@ -12,6 +12,7 @@ alias uu="sudo dnf upgrade -y"
 alias vim="nvim"
 alias k0s="sudo k0s"
 alias nerd="sudo nerdctl"
+alias t="terraform"
 # ---
 
 # Set name of the theme to load --- if set to "random", it will
