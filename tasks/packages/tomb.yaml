@@ -2,6 +2,7 @@
 - name: Check tomb installation status
   command: which tomb
   failed_when: false
+  changed_when: false
   register: tomb_installed
 # ---
 - block:
@@ -10,11 +11,17 @@
         url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
         dest: "{{ lookup('env', 'HOME') }}/"
     # ---
+    - name: Ensure Tomb directory
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
+        state: directory
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+    # ---
     - name: Unarchive tomb
       unarchive:
         src: "{{ lookup('env', 'HOME') }}/Tomb-2.9.tar.gz"
-        dest: "{{ lookup('env', 'HOME') }}"
-        creates: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
+        dest: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
     # ---
     - name: Install tomb dependencies
       ansible.builtin.dnf:

@@ -2,21 +2,28 @@
 - name: Check nerdctl installation status
   command: which nerdctl
   failed_when: false
+  changed_when: false
   register: nerdctl_installed
 # ---
 - block:
     - name: Install nerdctl
-      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}"/nerdctl-1.5.0.tar.gz "https://github.com/containerd/nerdctl/releases/download/v1.5.0/nerdctl-1.5.0-linux-amd64.tar.gz"
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}"/nerdctl-{{ nerdVer }}.tar.gz "https://github.com/containerd/nerdctl/releases/download/v{{ nerdVer }}/nerdctl-{{ nerdVer }}-linux-amd64.tar.gz"
+    # ---
+    - name: Ensure nerdctl directory
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}"
+        state: directory
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
     # ---
     - name: Unarchive nerdctl
       unarchive:
-        src: nerdctl-1.5.0.tar.gz
-        dest: "{{ lookup('env', 'HOME') }}"
-        creates: "{{ lookup('env', 'HOME') }}/nerdctl-1.5.0"
+        src: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}"
     # ---
     - name: Copy nerdctl bin to /usr/bin
       ansible.builtin.copy:
-        src: "{{ lookup('env', 'HOME') }}/nerdctl-1.5.0/nerdctl"
+        src: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}/nerdctl"
         dest: /usr/bin/nerdctl
         mode: "0755"
     # ---
@@ -31,10 +38,12 @@
         state: absent
         path: "{{ nerd_item }}"
       with_items:
-        - "{{ lookup('env', 'HOME') }}/nerdctl-1.5.0.tar.gz"
-        - "{{ lookup('env', 'HOME') }}/nerdctl-1.5.0/"
+        - "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}.tar.gz"
+        - "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}/"
       loop_control:
         loop_var: nerd_item
   become: true
+  vars:
+    nerdVer: "1.6.0"
   check_mode: false
   when: nerdctl_installed.rc != 0
