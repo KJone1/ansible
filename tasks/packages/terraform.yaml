@@ -19,6 +19,23 @@
         name:
           - terraform
         state: present
+    # ---
+    - name: Download terraform-docs
+      ansible.builtin.shell: curl -sSLo "{{ lookup('env', 'HOME') }}"/terraform-docs.tar.gz https://terraform-docs.io/dl/v0.16.0/terraform-docs-v0.16.0-$(uname)-amd64.tar.gz
+    # ---
+    - name: Install terraform-docs
+      ansible.builtin.unarchive:
+        src: "{{ lookup('env', 'HOME') }}/terraform-docs.tar.gz"
+        dest: "/usr/bin/"
+        owner: kj
+        group: kj
+        mode: "0751"
+    # ---
+    - name: Cleanup terraform-docs
+      ansible.builtin.file:
+        state: absent
+        path: "{{ lookup('env', 'HOME') }}/terraform-docs.tar.gz"
+    # ---
   become: true
   check_mode: false
   when: terraform_installed.rc != 0
