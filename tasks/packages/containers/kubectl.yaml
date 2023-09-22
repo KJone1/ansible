@@ -7,7 +7,7 @@
 # ---
 - block:
     - name: Install kubectl
-      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}"/.local/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      ansible.builtin.shell: curl -L -o /usr/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     # ---
     - name: Set kubectl file permissions
       ansible.builtin.file:
