@@ -8,20 +8,20 @@
 - block:
     - name: get tomb
       get_url:
-        url: https://files.dyne.org/tomb/releases/Tomb-2.9.tar.gz
+        url: https://files.dyne.org/tomb/releases/Tomb-2.10.tar.gz
         dest: "{{ lookup('env', 'HOME') }}/"
     # ---
     - name: Ensure Tomb directory
       ansible.builtin.file:
-        path: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
+        path: "{{ lookup('env', 'HOME') }}/Tomb-2.10"
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
     # ---
     - name: Unarchive tomb
       unarchive:
-        src: "{{ lookup('env', 'HOME') }}/Tomb-2.9.tar.gz"
-        dest: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
+        src: "{{ lookup('env', 'HOME') }}/Tomb-2.10.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/Tomb-2.10"
     # ---
     - name: Install tomb dependencies
       ansible.builtin.dnf:
@@ -32,7 +32,7 @@
     # ---
     - name: Run 'make install' for tomb
       make:
-        chdir: "{{ lookup('env', 'HOME') }}/Tomb-2.9"
+        chdir: "{{ lookup('env', 'HOME') }}/Tomb-2.10"
         target: install
     # ---
     - name: Cleanup tomb
@@ -40,8 +40,8 @@
         state: absent
         path: "{{ tomb_item }}"
       with_items:
-        - "{{ lookup('env', 'HOME') }}/Tomb-2.9.tar.gz"
-        - "{{ lookup('env', 'HOME') }}/Tomb-2.9/"
+        - "{{ lookup('env', 'HOME') }}/Tomb-2.10.tar.gz"
+        - "{{ lookup('env', 'HOME') }}/Tomb-2.10/"
       loop_control:
         loop_var: tomb_item
   become: true
