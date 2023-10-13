@@ -1,4 +1,3 @@
-# This is an example of /etc/nerdctl/nerdctl.toml .
 # Unrelated to the daemon's /etc/containerd/config.toml .
 
 debug          = false
