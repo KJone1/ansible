@@ -1,18 +1,22 @@
-.PHONY: lint play check
+.PHONY: help lint play check
 
 # Variables
 PLAYBOOK = playbooks/main.yaml
 CHECK_PLAYBOOK = --check
 
-# Lint Ansible playbook
-lint:
+help:
+	@echo "Available targets:"
+	@echo ""
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-10s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+lint: ## Lint Ansible playbook
 	ansible-lint $(PLAYBOOK)
 
-# Run Ansible playbook
-play:
+
+play: ## Run Ansible playbook
 	ansible-playbook $(PLAYBOOK)
 
-# Run Ansible playbook in check mode
-check:
+
+check: ## Run Ansible playbook in check mode
 	ansible-playbook $(PLAYBOOK) $(CHECK_PLAYBOOK)
 
