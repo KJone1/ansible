@@ -16,6 +16,7 @@ alias t="terraform"
 alias g="gcloud"
 alias docker="nerd"
 alias k9="k9s"
+alias m="make"
 # ---
 
 # Set name of the theme to load --- if set to "random", it will
