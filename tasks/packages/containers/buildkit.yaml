@@ -1,6 +1,6 @@
 ---
 - name: Check buildkit installation status
-  command: test -f /etc/systemd/system/buildkit.service
+  command: which buildkitd
   failed_when: false
   changed_when: false
   register: buildkit_installed
