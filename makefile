@@ -1,5 +1,7 @@
 .PHONY: help lint play check
 
+DEFAULT: help
+
 # Variables
 PLAYBOOK = playbooks/main.yaml
 CHECK_PLAYBOOK = --check
