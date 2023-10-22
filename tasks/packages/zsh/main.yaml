@@ -6,7 +6,9 @@
     state: present
   register: zsh
 # ---
-- block:
+- become: true
+  when: zsh is changed
+  block:
     - name: Install oh-my-zsh
       ansible.builtin.shell: curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
     # ---
@@ -21,5 +23,3 @@
         src: ./files/darkblood_preconf.zsh-theme
         dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/themes/darkblood_preconf.zsh-theme"
         mode: "0644"
-  become: true
-  when: zsh is changed
