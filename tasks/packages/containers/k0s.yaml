@@ -1,16 +1,18 @@
 ---
 - name: Check k0s installation status
-  command: which k0s
+  ansible.builtin.command: which k0s
   failed_when: false
   changed_when: false
   register: k0s_installed
 # ---
-- block:
+- become: true
+  check_mode: false
+  when: k0s_installed.rc != 0
+  block:
     - name: Install k0s
-      ansible.builtin.shell: curl -sSLf https://get.k0s.sh | sudo sh
+      ansible.builtin.shell: |
+        set -e -o pipefail
+        curl -sSLf https://get.k0s.sh | sudo sh
     # ---
     - name: Start k0s
       ansible.builtin.shell: sudo k0s install controller --single
-  become: true
-  check_mode: false
-  when: k0s_installed.rc != 0

@@ -1,29 +1,36 @@
 ---
 - name: Check nerdctl installation status
-  command: which nerdctl
+  ansible.builtin.command: which nerdctl
   failed_when: false
   changed_when: false
   register: nerdctl_installed
 # ---
-- block:
+- become: true
+  vars:
+    nerd_ver: "1.6.0"
+  check_mode: false
+  when: nerdctl_installed.rc != 0
+  block:
     - name: Install nerdctl
-      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}.tar.gz" "https://github.com/containerd/nerdctl/releases/download/v{{ nerdVer }}/nerdctl-{{ nerdVer }}-linux-amd64.tar.gz"
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/nerdctl.tar.gz" "https://github.com/containerd/nerdctl/releases/download/v{{ nerd_ver }}/nerdctl-{{ nerd_ver }}-linux-amd64.tar.gz"
     # ---
     - name: Ensure nerdctl directory
       ansible.builtin.file:
-        path: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}"
+        path: "{{ lookup('env', 'HOME') }}/nerdctl"
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
+        mode: "0751"
     # ---
     - name: Unarchive nerdctl
-      unarchive:
-        src: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}.tar.gz"
-        dest: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}"
+      ansible.builtin.unarchive:
+        src: "{{ lookup('env', 'HOME') }}/nerdctl.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/nerdctl"
+        mode: "0751"
     # ---
     - name: Copy nerdctl bin to /usr/bin
       ansible.builtin.copy:
-        src: "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}/nerdctl"
+        src: "{{ lookup('env', 'HOME') }}/nerdctl/nerdctl"
         dest: /usr/bin/nerdctl
         mode: "0755"
     # ---
@@ -38,12 +45,7 @@
         state: absent
         path: "{{ nerd_item }}"
       with_items:
-        - "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}.tar.gz"
-        - "{{ lookup('env', 'HOME') }}/nerdctl-{{ nerdVer }}/"
+        - "{{ lookup('env', 'HOME') }}/nerdctl.tar.gz"
+        - "{{ lookup('env', 'HOME') }}/nerdctl/"
       loop_control:
         loop_var: nerd_item
-  become: true
-  vars:
-    nerdVer: "1.6.0"
-  check_mode: false
-  when: nerdctl_installed.rc != 0

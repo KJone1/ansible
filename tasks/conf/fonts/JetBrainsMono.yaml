@@ -5,27 +5,29 @@
     state: directory
     owner: "{{ lookup('env', 'USER') }}"
     group: "{{ lookup('env', 'USER') }}"
+    mode: "0751"
 # ---
 - name: Check if JetBrainsMono font exists
   ansible.builtin.find:
     paths: "{{ lookup('env', 'HOME') }}/.fonts/"
     patterns:
       - "*Jet*Brains*Mono*"
-    recurse: yes
-  register: JetBrainsMono_exists
-  changed_when: JetBrainsMono_exists.files|length == 0
+    recurse: true
+  register: jb_mono_exists
+  changed_when: jb_mono_exists.files|length == 0
 # ---
-- block:
+- when: jb_mono_exists is changed
+  block:
     - name: Create JetBrainsMono font directory
       ansible.builtin.file:
         path: "{{ lookup('env', 'HOME') }}/.fonts/JetBrainsMono"
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
+        mode: "0751"
       # ---
     - name: Download JetBrainsMono
       ansible.builtin.unarchive:
         src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip
         dest: "{{ lookup('env', 'HOME') }}/.fonts/JetBrainsMono"
-        remote_src: yes
-  when: JetBrainsMono_exists is changed
+        remote_src: true

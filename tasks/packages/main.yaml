@@ -1,19 +1,18 @@
 ---
-- block:
-    - name: Check ffmpeg installation status
-      ansible.builtin.shell: dnf list --installed -e 0 "ffmpeg*"
-      register: ffmpeg_installed
-      changed_when: ffmpeg_installed.rc == 1
-      ignore_errors: true
-    # ---
+- name: Check ffmpeg installation status
+  ansible.builtin.shell: dnf list --installed -e 0 "ffmpeg*"
+  register: ffmpeg_installed
+  changed_when: ffmpeg_installed.rc == 1
+  ignore_errors: true
+# ---
+- become: true
+  when: ffmpeg_installed is changed
+  block:
     - name: Add rpm fusion repo
-      when: ffmpeg_installed is changed
       ansible.builtin.shell: dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     # ---
     - name: Swap broken ffmpeg installation
-      when: ffmpeg_installed is changed
       ansible.builtin.shell: dnf swap ffmpeg-free ffmpeg --allowerasing
-  become: true
 # ---
 - name: Install standard packages
   become: true

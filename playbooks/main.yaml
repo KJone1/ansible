@@ -9,12 +9,12 @@
         patterns:
           - "*.yaml"
           - "*.yml"
-        recurse: yes
+        recurse: true
         excludes:
           - "facts.yaml"
       register: tasks_found
     # ---
-    - include_tasks: "{{ task.path }}"
+    - ansible.builtin.include_tasks: "{{ task.path }}"
       no_log: true
       loop: "{{ tasks_found.files }}"
       loop_control:

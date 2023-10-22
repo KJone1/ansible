@@ -1,25 +1,31 @@
 ---
 - name: Check buildkit installation status
-  command: which buildkitd
+  ansible.builtin.command: which buildkitd
   failed_when: false
   changed_when: false
   register: buildkit_installed
 # ---
-- block:
+- become: true
+  vars:
+    build_ver: "0.12.2"
+  check_mode: false
+  when: buildkit_installed.rc != 0
+  block:
     - name: Install buildkit
-      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}.tar.gz" "https://github.com/moby/buildkit/releases/download/v{{ buildVer }}/buildkit-v{{ buildVer }}.linux-amd64.tar.gz"
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}.tar.gz" "https://github.com/moby/buildkit/releases/download/v{{ build_ver }}/buildkit-v{{ build_ver }}.linux-amd64.tar.gz"
     # ---
     - name: Ensure temp buildkit directory
       ansible.builtin.file:
-        path: "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}"
+        path: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}"
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
+        mode: "0751"
     # ---
     - name: Unarchive buildkit
-      unarchive:
-        src: "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}.tar.gz"
-        dest: "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}"
+      ansible.builtin.unarchive:
+        src: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}"
         extra_opts:
           - --strip=1
           - --no-anchored
@@ -28,7 +34,7 @@
     # ---
     - name: Copy buildkit bin to /usr/bin
       ansible.builtin.copy:
-        src: "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}/{{ buildkit_item }}"
+        src: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}/{{ buildkit_item }}"
         dest: /usr/bin/{{ buildkit_item }}
         mode: "0755"
       loop:
@@ -58,12 +64,7 @@
         state: absent
         path: "{{ buildkit_item }}"
       loop:
-        - "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}.tar.gz"
-        - "{{ lookup('env', 'HOME') }}/buildkit-{{ buildVer }}/"
+        - "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}.tar.gz"
+        - "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}/"
       loop_control:
         loop_var: buildkit_item
-  become: true
-  vars:
-    buildVer: "0.12.2"
-  check_mode: false
-  when: buildkit_installed.rc != 0

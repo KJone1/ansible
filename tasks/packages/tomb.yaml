@@ -1,15 +1,19 @@
 ---
 - name: Check tomb installation status
-  command: which tomb
+  ansible.builtin.command: which tomb
   failed_when: false
   changed_when: false
   register: tomb_installed
 # ---
-- block:
-    - name: get tomb
-      get_url:
+- become: true
+  check_mode: false
+  when: tomb_installed.rc != 0
+  block:
+    - name: Get tomb
+      ansible.builtin.get_url:
         url: https://files.dyne.org/tomb/releases/Tomb-2.10.tar.gz
         dest: "{{ lookup('env', 'HOME') }}/"
+        mode: "0751"
     # ---
     - name: Ensure Tomb directory
       ansible.builtin.file:
@@ -17,9 +21,10 @@
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
+        mode: "0751"
     # ---
     - name: Unarchive tomb
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ lookup('env', 'HOME') }}/Tomb-2.10.tar.gz"
         dest: "{{ lookup('env', 'HOME') }}/Tomb-2.10"
     # ---
@@ -44,6 +49,3 @@
         - "{{ lookup('env', 'HOME') }}/Tomb-2.10/"
       loop_control:
         loop_var: tomb_item
-  become: true
-  check_mode: false
-  when: tomb_installed.rc != 0
