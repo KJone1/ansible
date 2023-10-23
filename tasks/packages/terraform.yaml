@@ -27,7 +27,7 @@
       ansible.builtin.shell: curl -sSLo "{{ lookup('env', 'HOME') }}"/terraform-docs.tar.gz https://terraform-docs.io/dl/v0.16.0/terraform-docs-v0.16.0-$(uname)-amd64.tar.gz
     # ---
     - name: Install terraform-docs
-      ansible.builtin.ansible.builtin.unarchive:
+      ansible.builtin.unarchive:
         src: "{{ lookup('env', 'HOME') }}/terraform-docs.tar.gz"
         dest: "/usr/bin/"
         owner: kj
