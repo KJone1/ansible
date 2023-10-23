@@ -1,0 +1,18 @@
+---
+- name: Check thorium installation status
+  ansible.builtin.command: which thorium-browser
+  failed_when: false
+  changed_when: false
+  register: thorium_installed
+# ---
+- become: true
+  check_mode: false
+  when: thorium_installed.rc != 0
+  block:
+    - name: Download thorium
+      ansible.builtin.command: curl -L -o "{{ lookup('env', 'HOME') }}/thorium-browser.rpm" "https://github.com/Alex313031/thorium/releases/download/M117.0.5938.157/thorium-browser_117.0.5938.157.x86_64.rpm"
+      # ---
+    - name: Install thorium
+      ansible.builtin.dnf:
+        name: ./thorium-browser.rpm
+        state: present
