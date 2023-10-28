@@ -14,5 +14,10 @@
       # ---
     - name: Install thorium
       ansible.builtin.dnf:
-        name: ./thorium-browser.rpm
+        name: "{{ lookup('env', 'HOME') }}/thorium-browser.rpm"
         state: present
+      # ---
+    - name: Cleanup thorium rpm file
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/thorium-browser.rpm"
+        state: absent
