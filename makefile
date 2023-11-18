@@ -3,7 +3,7 @@
 DEFAULT: help
 
 # Variables
-PLAYBOOK = playbooks/main.yaml
+PLAYBOOK = main.yaml
 CHECK_OPTIONS = --check
 
 help:  ## Display this help.
@@ -16,8 +16,8 @@ lint: ## Lint Ansible playbook.
 		--skip-list=name[missing],command-instead-of-shell,yaml[line-length],command-instead-of-module
 
 play: ## Run Ansible playbook.
-	ansible-playbook $(PLAYBOOK)
+	ansible-playbook playbooks/$(PLAYBOOK)
 
 check: ## Run Ansible playbook in check mode.
-	ansible-playbook $(PLAYBOOK) $(CHECK_OPTIONS)
+	ansible-playbook playbooks/$(PLAYBOOK) $(CHECK_OPTIONS)
 
