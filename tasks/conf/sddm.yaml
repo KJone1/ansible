@@ -1,0 +1,14 @@
+---
+- name: Clone theme from github
+  ansible.builtin.git:
+    repo: https://github.com/KJone1/sddm-dark-chocolate.git
+    dest: /usr/share/sddm/themes/sddm-dark-chocolate
+    version: master
+
+# ---
+
+- name: Update sddm to use new theme
+  ansible.builtin.lineinfile:
+    path: /home/kj/vsroot/ansible-demo/kde_settings.conf
+    regexp: "^Current="
+    line: Current=sddm-dark-chocolate
