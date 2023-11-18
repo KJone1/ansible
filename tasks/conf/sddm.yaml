@@ -9,6 +9,6 @@
 
 - name: Update sddm to use new theme
   ansible.builtin.lineinfile:
-    path: /home/kj/vsroot/ansible-demo/kde_settings.conf
+    path: /etc/sddm.conf.d/kde_settings.conf
     regexp: "^Current="
     line: Current=sddm-dark-chocolate
