@@ -6,6 +6,10 @@ export ZSH="$HOME/.oh-my-zsh"
 
 export KUBECONFIG="/home/kj/.kube/config"
 export PATH="$PATH:/home/kj/.local/bin:/opt:/home/kj/.local/bin/go/bin/:/var/lib/k0s/bin"
+
+export EDITOR=nvim
+export K9S_EDITOR=nvim
+
 # --- Set up aliass here ---
 alias k="kubectl"
 alias uu="sudo dnf upgrade -y && sudo flatpak update -y"
