@@ -1,0 +1,43 @@
+version: '3'
+
+silent: true
+
+vars:
+  PLAYBOOK: main.yaml
+  FLAGS: ""
+
+tasks:
+  default:
+    desc: Runs 'task help'
+    cmds:
+      - task help
+
+  help:
+    desc: Display this help.
+    cmds:
+      - task -a
+
+  lint:
+    desc: Lint Ansible playbook. 
+    vars:
+      LINT_PROFILE: production
+      LINT_SKIPS: name[missing],command-instead-of-shell,yaml[line-length],command-instead-of-module
+    cmds:
+      - |
+          ansible-lint \
+            --profile "{{.LINT_PROFILE}}" \
+            --skip-list="{{.LINT_SKIPS}}" \
+            playbooks/{{.PLAYBOOK}}
+
+  play:
+    desc: Run Ansible playbook. 
+    cmds:
+      - ansible-playbook playbooks/{{.PLAYBOOK}} {{.FLAGS}}
+
+  check:
+    desc: Run Ansible playbook in check mode. 
+    vars:
+      CHECK_OPTIONS: --check -v
+    cmds:
+      - ansible-playbook playbooks/{{.PLAYBOOK}} {{.CHECK_OPTIONS}}
+
