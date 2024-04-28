@@ -9,4 +9,7 @@
       - neovim
       - qbittorrent
       - wireguard-tools
+      - thunar
+      - wl-clipboard
+      - grimshot
     state: latest
