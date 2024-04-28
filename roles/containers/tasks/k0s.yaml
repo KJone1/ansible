@@ -1,13 +1,5 @@
----
-- name: Check k0s installation status
-  ansible.builtin.command: which k0s
-  failed_when: false
-  changed_when: false
-  register: k0s_installed
-# ---
 - become: true
   check_mode: false
-  when: k0s_installed.rc != 0
   block:
     - name: Install k0s
       ansible.builtin.shell: |

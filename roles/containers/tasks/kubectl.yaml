@@ -1,13 +1,5 @@
----
-- name: Check kubectl installation status
-  ansible.builtin.command: which kubectl
-  failed_when: false
-  changed_when: false
-  register: kubectl_installed
-# ---
 - become: true
   check_mode: false
-  when: kubectl_installed.rc != 0
   block:
     - name: Install kubectl
       ansible.builtin.shell: curl -L -o /usr/bin/kubectl "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -17,4 +9,4 @@
         path: /usr/bin/kubectl
         owner: kj
         group: kj
-        mode: "0751"
+        mode: "0755"

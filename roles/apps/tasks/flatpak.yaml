@@ -1,0 +1,10 @@
+- name: Install flatpak
+  ansible.builtin.package:
+    name: flatpak
+    state: latest
+- name: Install flatpak packages
+  community.general.flatpak:
+    name:
+      - com.discordapp.Discord
+      - io.github.flattool.Warehouse
+      - net.nokyan.Resources

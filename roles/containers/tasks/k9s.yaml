@@ -1,0 +1,32 @@
+- become: true
+  vars:
+    version: "v0.27.4"
+  check_mode: false
+  block:
+    - name: Ensure k9s directory
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/k9s"
+        state: directory
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+        mode: "0755"
+    # ---
+    - name: Install k9s
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/k9s/k9s.tar.gz" "https://github.com/derailed/k9s/releases/download/{{ version }}/k9s_Linux_amd64.tar.gz"
+    # ---
+    - name: Unarchive k9s
+      ansible.builtin.unarchive:
+        src: "{{ lookup('env', 'HOME') }}/k9s/k9s.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/k9s"
+        mode: "0755"
+    # ---
+    - name: Copy k9s bin to /usr/bin
+      ansible.builtin.copy:
+        src: "{{ lookup('env', 'HOME') }}/k9s/k9s"
+        dest: /usr/bin/k9s
+        mode: "0755"
+    # ---
+    - name: Cleanup k9s
+      ansible.builtin.file:
+        state: absent
+        path: "{{ lookup('env', 'HOME') }}/k9s/"

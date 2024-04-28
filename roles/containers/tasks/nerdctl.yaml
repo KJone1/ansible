@@ -1,32 +1,24 @@
----
-- name: Check nerdctl installation status
-  ansible.builtin.command: which nerdctl
-  failed_when: false
-  changed_when: false
-  register: nerdctl_installed
-# ---
 - become: true
   vars:
-    nerd_ver: "1.7.2"
+    version: "v1.7.2"
   check_mode: false
-  when: nerdctl_installed.rc != 0
   block:
-    - name: Install nerdctl
-      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/nerdctl.tar.gz" "https://github.com/containerd/nerdctl/releases/download/v{{ nerd_ver }}/nerdctl-{{ nerd_ver }}-linux-amd64.tar.gz"
-    # ---
     - name: Ensure nerdctl directory
       ansible.builtin.file:
         path: "{{ lookup('env', 'HOME') }}/nerdctl"
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
-        mode: "0751"
+        mode: "0755"
+    # ---
+    - name: Install nerdctl
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/nerdctl/nerdctl.tar.gz" "https://github.com/containerd/nerdctl/releases/download/{{ version }}/nerdctl-{{ version | trim(chars='v') }}-linux-amd64.tar.gz"
     # ---
     - name: Unarchive nerdctl
       ansible.builtin.unarchive:
-        src: "{{ lookup('env', 'HOME') }}/nerdctl.tar.gz"
+        src: "{{ lookup('env', 'HOME') }}/nerdctl/nerdctl.tar.gz"
         dest: "{{ lookup('env', 'HOME') }}/nerdctl"
-        mode: "0751"
+        mode: "0755"
     # ---
     - name: Copy nerdctl bin to /usr/bin
       ansible.builtin.copy:
@@ -36,16 +28,11 @@
     # ---
     - name: Copy nerdctl.toml to /etc
       ansible.builtin.copy:
-        src: ./files/nerdctl.toml
+        src: nerdctl.toml
         dest: /etc/nerdctl/nerdctl.toml
         mode: "0644"
     # ---
     - name: Cleanup nerdctl
       ansible.builtin.file:
         state: absent
-        path: "{{ nerd_item }}"
-      with_items:
-        - "{{ lookup('env', 'HOME') }}/nerdctl.tar.gz"
-        - "{{ lookup('env', 'HOME') }}/nerdctl/"
-      loop_control:
-        loop_var: nerd_item
+        path: "{{ lookup('env', 'HOME') }}/nerdctl/"

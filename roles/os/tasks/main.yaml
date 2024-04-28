@@ -1,0 +1,3 @@
+- ansible.builtin.include_tasks: sddm.yaml
+- ansible.builtin.include_tasks: sudoers.yaml
+- ansible.builtin.include_tasks: dotfiles.yaml

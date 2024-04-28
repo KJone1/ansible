@@ -1,12 +1,13 @@
----
 - name: Clone theme from github
   ansible.builtin.git:
     repo: https://github.com/KJone1/sddm-dark-chocolate.git
     dest: /usr/share/sddm/themes/sddm-dark-chocolate
     version: master
-
+  register: sddm_repo_clone
+  failed_when:
+    - sddm_repo_clone.failed
+    - not 'Local modifications exist in ' in sddm_repo_clone.msg
 # ---
-
 - name: Update sddm to use new theme
   ansible.builtin.lineinfile:
     path: /etc/sddm.conf.d/kde_settings.conf

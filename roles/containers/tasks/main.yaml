@@ -1,0 +1,29 @@
+- ansible.builtin.include_role:
+    name: exists
+  vars:
+    target: "{{ exists_var }}"
+  with_items:
+    - k0s
+    - k9s
+    - kubectl
+    - nerdctl
+    - buildkitd
+  loop_control:
+    loop_var: exists_var
+
+- ansible.builtin.include_tasks: k0s.yaml
+  when: exists_k0s | int != 0
+- ansible.builtin.include_tasks: k9s.yaml
+  when: exists_k9s | int != 0
+  vars:
+    version: v0.32.4
+- ansible.builtin.include_tasks: kubectl.yaml
+  when: exists_kubectl | int != 0
+- ansible.builtin.include_tasks: nerdctl.yaml
+  when: exists_nerdctl | int != 0
+  vars:
+    version: v1.7.5
+- ansible.builtin.include_tasks: buildkit.yaml
+  when: exists_buildkitd | int!= 0
+  vars:
+    version: v0.13.2

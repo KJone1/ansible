@@ -1,0 +1,40 @@
+- become: true
+  check_mode: false
+  vars:
+    version: 2.10
+  block:
+    - name: Ensure Tomb directory
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/tomb"
+        state: directory
+        owner: "{{ lookup('env', 'USER') }}"
+        group: "{{ lookup('env', 'USER') }}"
+        mode: "0755"
+    # ---
+    - name: Get tomb
+      ansible.builtin.get_url:
+        url: https://files.dyne.org/tomb/releases/Tomb-{{ version }}.tar.gz
+        dest: "{{ lookup('env', 'HOME') }}/tomb/tomb.tar.gz"
+        mode: "0755"
+    # ---
+    - name: Unarchive tomb
+      ansible.builtin.unarchive:
+        src: "{{ lookup('env', 'HOME') }}/tomb.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/tomb"
+    # ---
+    - name: Install tomb dependencies
+      ansible.builtin.dnf:
+        name:
+          - make
+          - steghide
+        state: present
+    # ---
+    - name: Run 'make install' for tomb
+      community.general.make:
+        chdir: "{{ lookup('env', 'HOME') }}/tomb"
+        target: install
+    # ---
+    - name: Cleanup tomb
+      ansible.builtin.file:
+        state: absent
+        path: "{{ lookup('env', 'HOME') }}/tomb/"

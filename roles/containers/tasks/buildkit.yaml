@@ -1,31 +1,23 @@
----
-- name: Check buildkit installation status
-  ansible.builtin.command: which buildkitd
-  failed_when: false
-  changed_when: false
-  register: buildkit_installed
-# ---
 - become: true
   vars:
-    build_ver: "0.12.2"
+    version: "v0.12.2"
   check_mode: false
-  when: buildkit_installed.rc != 0
   block:
-    - name: Install buildkit
-      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}.tar.gz" "https://github.com/moby/buildkit/releases/download/v{{ build_ver }}/buildkit-v{{ build_ver }}.linux-amd64.tar.gz"
-    # ---
     - name: Ensure temp buildkit directory
       ansible.builtin.file:
-        path: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}"
+        path: "{{ lookup('env', 'HOME') }}/buildkit"
         state: directory
         owner: "{{ lookup('env', 'USER') }}"
         group: "{{ lookup('env', 'USER') }}"
-        mode: "0751"
+        mode: "0755"
+    # ---
+    - name: Install buildkit
+      ansible.builtin.shell: curl -L -o "{{ lookup('env', 'HOME') }}/buildkit/buildkit.tar.gz" "https://github.com/moby/buildkit/releases/download/{{ version }}/buildkit-{{ version }}.linux-amd64.tar.gz"
     # ---
     - name: Unarchive buildkit
       ansible.builtin.unarchive:
-        src: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}.tar.gz"
-        dest: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}"
+        src: "{{ lookup('env', 'HOME') }}/buildkit/buildkit.tar.gz"
+        dest: "{{ lookup('env', 'HOME') }}/buildkit"
         extra_opts:
           - --strip=1
           - --no-anchored
@@ -34,7 +26,7 @@
     # ---
     - name: Copy buildkit bin to /usr/bin
       ansible.builtin.copy:
-        src: "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}/{{ buildkit_item }}"
+        src: "{{ lookup('env', 'HOME') }}/buildkit/{{ buildkit_item }}"
         dest: /usr/bin/{{ buildkit_item }}
         mode: "0755"
       loop:
@@ -45,13 +37,13 @@
     # ---
     - name: Copy buildkit.toml to /etc
       ansible.builtin.copy:
-        src: ./files/buildkitd.toml
+        src: buildkitd.toml
         dest: /etc/buildkit/buildkit.toml
         mode: "0644"
     # ---
     - name: Copy buildkit service file
       ansible.builtin.copy:
-        src: ./files/buildkit.service
+        src: buildkit.service
         dest: /etc/systemd/system/buildkit.service
         mode: "0644"
     # ---
@@ -62,9 +54,4 @@
     - name: Cleanup buildkit
       ansible.builtin.file:
         state: absent
-        path: "{{ buildkit_item }}"
-      loop:
-        - "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}.tar.gz"
-        - "{{ lookup('env', 'HOME') }}/buildkit-{{ build_ver }}/"
-      loop_control:
-        loop_var: buildkit_item
+        path: "{{ lookup('env', 'HOME') }}/buildkit/"

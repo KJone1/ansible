@@ -1,0 +1,13 @@
+- ansible.builtin.include_tasks: dnf.yaml
+- ansible.builtin.include_tasks: flatpak.yaml
+- ansible.builtin.include_tasks: ffmpeg.yaml
+- ansible.builtin.include_tasks: zsh.yaml
+  #####
+- ansible.builtin.include_role:
+    name: exists
+  vars:
+    target: tomb
+- ansible.builtin.include_tasks: tomb.yaml
+  when: exists_tomb | int != 0
+  vars:
+    version: 2.10
