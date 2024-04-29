@@ -3,10 +3,4 @@
   ansible.builtin.dnf:
     name: zsh
     state: present
-  register: zsh
-# ---
-- become: true
-  when: zsh is changed
-  block:
-    - name: Install oh-my-zsh
-      ansible.builtin.shell: curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+  notify: Install oh-my-zsh
