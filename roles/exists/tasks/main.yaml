@@ -1,8 +1,8 @@
 - when: target | length == 0
   block:
-    - debug:
+    - ansible.builtin.debug:
         msg: No target specified for "exists" role | ending play...
-    - meta: end_play
+    - ansible.builtin.meta: end_play
 ###
 - when: target | length > 0
   block:
