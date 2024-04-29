@@ -6,7 +6,7 @@
 ###
 - when: target | length > 0
   block:
-    - name: Check installation status of {{ target }}
+    - name: Check if {{ target }} exists
       ansible.builtin.command: which {{ target }}
       failed_when: false
       changed_when: false
