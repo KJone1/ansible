@@ -11,6 +11,6 @@
       failed_when: false
       changed_when: false
       register: result
-    - name: Set fact about {{ target }} 
+    - name: Set fact about {{ target }}
       ansible.builtin.set_fact:
         exists_{{ target }}: "{{ result.rc }}"
