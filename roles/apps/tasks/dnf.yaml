@@ -12,4 +12,6 @@
       - thunar
       - wl-clipboard
       - grimshot
+      - fd-find
+      - lazygit
     state: latest
