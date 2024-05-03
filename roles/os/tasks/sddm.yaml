@@ -7,9 +7,4 @@
   failed_when:
     - sddm_repo_clone.failed
     - not 'Local modifications exist in ' in sddm_repo_clone.msg
-# ---
-- name: Update sddm to use new theme
-  ansible.builtin.lineinfile:
-    path: /etc/sddm.conf.d/kde_settings.conf
-    regexp: "^Current="
-    line: Current=sddm-dark-chocolate
+  notify: Update sddm to use new theme

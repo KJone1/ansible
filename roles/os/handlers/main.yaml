@@ -1,0 +1,7 @@
+- name: Update sddm to use new theme
+  ansible.builtin.lineinfile:
+    path: /etc/sddm.conf.d/kde_settings.conf
+    regexp: "^Current="
+    line: Current=sddm-dark-chocolate
+- name: Run dotfiles install script
+  ansible.builtin.script: "{{ lookup('env', 'HOME') }}/DEV/dotfiles/install.sh"

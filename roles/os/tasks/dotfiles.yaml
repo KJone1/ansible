@@ -3,6 +3,7 @@
     repo: https://github.com/KJone1/dotfiles.git
     dest: "{{ lookup('env', 'HOME') }}/DEV/dotfiles"
     version: master
-# ---
-- name: Run dotrfiles install script
-  ansible.builtin.script: "{{ lookup('env', 'HOME') }}/DEV/dotfiles/install.sh"
+  failed_when:
+    - sddm_repo_clone.failed
+    - not 'Local modifications exist in ' in sddm_repo_clone.msg
+  notify: Run dotfiles install script
