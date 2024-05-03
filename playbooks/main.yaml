@@ -1,11 +1,6 @@
 - name: Setup Play
   hosts: all
-  tasks:
-    - ansible.builtin.include_role:
-        name: '{{ roleinputvar }}'
-      loop:
-        - 'apps'
-        - 'containers'
-        - 'os'
-      loop_control:
-        loop_var: roleinputvar
+  roles:
+    - 'apps'
+    - 'containers'
+    - 'os'
