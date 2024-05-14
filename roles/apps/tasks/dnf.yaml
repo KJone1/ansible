@@ -15,4 +15,5 @@
       - fd-find
       - lazygit
       - ripgrep
+      - bat
     state: latest
