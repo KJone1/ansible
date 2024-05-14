@@ -16,4 +16,5 @@
       - lazygit
       - ripgrep
       - bat
+      - nnn
     state: latest
