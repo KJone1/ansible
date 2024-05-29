@@ -22,4 +22,5 @@
       - ripgrep
       - bat
       - nnn
+      - stow
     state: latest
