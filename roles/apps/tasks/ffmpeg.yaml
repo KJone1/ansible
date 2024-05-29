@@ -1,11 +1,11 @@
 - name: Add rpm fusion repo
-  ansible.builtin.shell: dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+  ansible.builtin.shell: dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm -y
   register: fusion_repo_res
   changed_when:
     - fusion_repo_res.changed
     - not 'Nothing to do.' in fusion_repo_res.stdout
 - name: Fix broken ffmpeg installation
-  ansible.builtin.shell: dnf swap ffmpeg-free ffmpeg --allowerasing
+  ansible.builtin.shell: dnf swap ffmpeg-free ffmpeg --allowerasing -y
   register: swap_ffmpeg_res
   changed_when:
     - swap_ffmpeg_res.changed
