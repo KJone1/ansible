@@ -26,6 +26,11 @@
         dest: /usr/bin/nerdctl
         mode: "0755"
     # ---
+    - name: Ensure /etc/nerdctl directory
+      ansible.builtin.file:
+        path: "/etc/nerdctl"
+        state: directory
+    # ---
     - name: Copy nerdctl.toml to /etc
       ansible.builtin.copy:
         src: nerdctl.toml
