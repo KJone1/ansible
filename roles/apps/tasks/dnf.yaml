@@ -15,6 +15,7 @@
       - wireguard-tools
       - thunar
       - sway
+      - waybar
       - wl-clipboard
       - grimshot
       - fd-find
@@ -23,4 +24,5 @@
       - bat
       - nnn
       - stow
+      - NetworkManager-tui
     state: latest
