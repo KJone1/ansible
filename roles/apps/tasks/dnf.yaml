@@ -1,3 +1,7 @@
+- name: Enable copr repo for lazygit
+  community.general.copr:
+    name: atim/lazygit
+    state: enabled
 - name: Install standard packages
   become: true
   ansible.builtin.dnf:
