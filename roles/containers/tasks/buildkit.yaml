@@ -35,6 +35,11 @@
       loop_control:
         loop_var: buildkit_item
     # ---
+    - name: Ensure /etc/buildkit directory
+      ansible.builtin.file:
+        path: "/etc/nerdctl"
+        state: directory
+    # ---
     - name: Copy buildkit.toml to /etc
       ansible.builtin.copy:
         src: buildkitd.toml
