@@ -19,7 +19,7 @@
     # ---
     - name: Unarchive tomb
       ansible.builtin.unarchive:
-        src: "{{ lookup('env', 'HOME') }}/tomb.tar.gz"
+        src: "{{ lookup('env', 'HOME') }}/tomb/tomb.tar.gz"
         dest: "{{ lookup('env', 'HOME') }}/tomb"
     # ---
     - name: Install tomb dependencies
