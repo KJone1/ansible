@@ -25,6 +25,6 @@
       - nnn
       - stow
       - NetworkManager-tui
-      - waybar
+      - wofi
       - go-task
     state: latest
