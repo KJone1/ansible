@@ -26,4 +26,5 @@
       - stow
       - NetworkManager-tui
       - waybar
+      - go-task
     state: latest
