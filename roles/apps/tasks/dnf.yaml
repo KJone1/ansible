@@ -25,4 +25,5 @@
       - nnn
       - stow
       - NetworkManager-tui
+      - waybar
     state: latest
