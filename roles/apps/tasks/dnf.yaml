@@ -22,9 +22,10 @@
       - lazygit
       - ripgrep
       - bat
-      - nnn
       - stow
       - NetworkManager-tui
       - wofi
       - go-task
+      - wlogout
+      - cowsay
     state: latest
