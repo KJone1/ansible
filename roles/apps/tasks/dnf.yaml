@@ -21,6 +21,7 @@
       - fd-find
       - lazygit
       - ripgrep
+      - fzf
       - bat
       - stow
       - NetworkManager-tui
