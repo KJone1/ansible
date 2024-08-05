@@ -1,6 +1,6 @@
 - become: true
   vars:
-    version: "v0.12.2"
+    version: "v0.15.1"
   check_mode: false
   block:
     - name: Ensure temp buildkit directory
@@ -37,7 +37,7 @@
     # ---
     - name: Ensure /etc/buildkit directory
       ansible.builtin.file:
-        path: "/etc/nerdctl"
+        path: "/etc/buildkit"
         state: directory
     # ---
     - name: Copy buildkit.toml to /etc

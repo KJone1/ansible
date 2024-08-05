@@ -1,6 +1,6 @@
 - become: true
   vars:
-    version: "v1.7.2"
+    version: "v1.7.6"
   check_mode: false
   block:
     - name: Ensure nerdctl directory
