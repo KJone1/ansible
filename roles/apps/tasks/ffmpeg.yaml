@@ -10,4 +10,3 @@
   changed_when:
     - swap_ffmpeg_res.changed
     - not 'Nothing to do.' in swap_ffmpeg_res.stdout
-

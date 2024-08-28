@@ -22,8 +22,7 @@
         src: "{{ lookup('env', 'HOME') }}/tomb/tomb.tar.gz"
         dest: "{{ lookup('env', 'HOME') }}/tomb"
         extra_opts:
-        - --strip=1
-
+          - --strip=1
     # ---
     - name: Install tomb dependencies
       ansible.builtin.dnf:
