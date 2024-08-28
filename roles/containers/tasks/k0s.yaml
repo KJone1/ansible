@@ -7,4 +7,4 @@
         curl -sSLf https://get.k0s.sh | sudo sh
     # ---
     - name: Start k0s
-      ansible.builtin.shell: sudo k0s install controller --single
+      ansible.builtin.shell: sudo k0s install controller --force --single
